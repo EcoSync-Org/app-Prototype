@@ -68,8 +68,37 @@ export default function LoginPage() {
       </div>
 
       {/* Right Side - Login Form */}
-      <div className="flex-1 flex items-center justify-center p-8 bg-white">
-        <div className="w-full max-w-md">
+      <div className="flex-1 flex items-center justify-center p-8 bg-white relative overflow-hidden">
+        {/* Decorative Corner Patterns */}
+        {/* Top Right Corner */}
+        <div className="absolute top-0 right-0 w-64 h-64 opacity-5">
+          <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="cornerStripes" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                <line x1="0" y1="20" x2="20" y2="0" stroke="#22c55e" strokeWidth="2"/>
+                <line x1="10" y1="20" x2="20" y2="10" stroke="#22c55e" strokeWidth="1.5"/>
+                <line x1="0" y1="10" x2="10" y2="0" stroke="#22c55e" strokeWidth="1.5"/>
+              </pattern>
+            </defs>
+            <circle cx="256" cy="-128" r="200" fill="url(#cornerStripes)"/>
+          </svg>
+        </div>
+
+        {/* Bottom Left Corner */}
+        <div className="absolute bottom-0 left-0 w-48 h-48 opacity-5">
+          <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="cornerStripes2" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                <line x1="0" y1="0" x2="20" y2="20" stroke="#0ea5e9" strokeWidth="2"/>
+                <line x1="10" y1="0" x2="20" y2="10" stroke="#0ea5e9" strokeWidth="1.5"/>
+                <line x1="0" y1="10" x2="10" y2="20" stroke="#0ea5e9" strokeWidth="1.5"/>
+              </pattern>
+            </defs>
+            <circle cx="-96" cy="240" r="180" fill="url(#cornerStripes2)"/>
+          </svg>
+        </div>
+
+        <div className="w-full max-w-md relative z-10">
           {/* Mobile logo */}
           <div className="lg:hidden text-center mb-8">
             <Image
