@@ -7,25 +7,25 @@ import { Badge } from "@/components/ui/badge"
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b bg-white/80 backdrop-blur-xl shadow-sm px-6">
+    <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b bg-white px-8">
       {/* Search */}
-      <div className="flex-1 max-w-md">
-        <div className="relative group">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400 group-focus-within:text-green-500 transition-colors" />
+      <div className="flex-1 max-w-xl">
+        <div className="relative">
+          <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
           <Input
             type="search"
             placeholder="Search students, schools, challenges..."
-            className="pl-10 bg-gray-50 border-gray-200 focus:bg-white focus:border-green-500 focus:ring-green-500 transition-all rounded-xl"
+            className="pl-10 h-10 bg-white border-gray-300 focus:border-green-500 rounded-lg"
           />
         </div>
       </div>
 
       {/* Right section */}
-      <div className="flex items-center gap-2">
-        <Button variant="ghost" size="icon" className="relative hover:bg-green-50 rounded-xl transition-all group">
-          <Bell className="h-5 w-5 text-gray-600 group-hover:text-green-600 transition-colors" />
+      <div className="flex items-center gap-3">
+        <Button variant="ghost" size="icon" className="relative">
+          <Bell className="h-5 w-5 text-gray-600" />
           <Badge 
-            className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-gradient-to-r from-green-500 to-emerald-600 border-0 animate-pulse"
+            className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-green-500 border-0"
           >
             3
           </Badge>
@@ -34,4 +34,3 @@ export function Header() {
     </header>
   )
 }
-

@@ -49,86 +49,76 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       {/* Page Header */}
-      <div className="relative">
-        <div className="absolute -top-20 -right-20 w-64 h-64 bg-green-200 rounded-full blur-3xl opacity-20"></div>
-        <div className="absolute -top-10 -left-10 w-48 h-48 bg-blue-200 rounded-full blur-3xl opacity-20"></div>
-        <div className="relative">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="h-1 w-12 bg-gradient-to-r from-green-500 to-blue-500 rounded-full"></div>
-            <span className="text-sm font-semibold text-green-600 uppercase tracking-wider">Live Dashboard</span>
-          </div>
-          <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">
-            Dashboard Overview
-          </h1>
-          <p className="text-muted-foreground mt-2 text-lg">
-            Monitor student engagement and environmental impact across all schools
-          </p>
+      <div className="mb-8">
+        <div className="flex items-center gap-2 mb-2">
+          <div className="h-1 w-10 bg-green-500 rounded-full"></div>
+          <span className="text-xs font-semibold text-green-600 uppercase tracking-wider">Live Dashboard</span>
         </div>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          Dashboard Overview
+        </h1>
+        <p className="text-gray-600">
+          Monitor student engagement and environmental impact across all schools
+        </p>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="relative overflow-hidden border-0 bg-gradient-to-br from-green-50 to-emerald-50 hover:shadow-lg transition-all duration-300 group hover:scale-[1.02]">
-          <div className="absolute top-0 right-0 w-20 h-20 bg-green-400/10 rounded-full blur-2xl"></div>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-green-900">Active Students</CardTitle>
-            <div className="p-2 bg-green-500 rounded-lg group-hover:scale-110 transition-transform">
-              <Users className="h-4 w-4 text-white" />
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <Card className="border border-gray-200 hover:shadow-md transition-shadow bg-white">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-gray-700">Active Students</CardTitle>
+            <div className="p-2 bg-green-100 rounded-lg">
+              <Users className="h-4 w-4 text-green-600" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-green-700">1,248</div>
-            <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
-              <TrendingUp className="h-3 w-3" />
-              <span className="font-medium">+12.5%</span> from last month
+            <div className="text-2xl font-bold text-gray-900">1,248</div>
+            <p className="text-xs text-gray-500 mt-1">
+              <span className="text-green-600 font-medium">+12.5%</span> from last month
             </p>
           </CardContent>
         </Card>
 
-        <Card className="relative overflow-hidden border-0 bg-gradient-to-br from-blue-50 to-cyan-50 hover:shadow-lg transition-all duration-300 group hover:scale-[1.02]">
-          <div className="absolute top-0 right-0 w-20 h-20 bg-blue-400/10 rounded-full blur-2xl"></div>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-blue-900">Total Submissions</CardTitle>
-            <div className="p-2 bg-blue-500 rounded-lg group-hover:scale-110 transition-transform">
-              <Target className="h-4 w-4 text-white" />
+        <Card className="border border-gray-200 hover:shadow-md transition-shadow bg-white">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-gray-700">Total Submissions</CardTitle>
+            <div className="p-2 bg-blue-100 rounded-lg">
+              <Target className="h-4 w-4 text-blue-600" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-blue-700">3,456</div>
-            <p className="text-xs text-blue-600 mt-1 flex items-center gap-1">
-              <TrendingUp className="h-3 w-3" />
-              <span className="font-medium">+341</span> this week
+            <div className="text-2xl font-bold text-gray-900">3,456</div>
+            <p className="text-xs text-gray-500 mt-1">
+              <span className="text-green-600 font-medium">+341</span> this week
             </p>
           </CardContent>
         </Card>
 
-        <Card className="relative overflow-hidden border-0 bg-gradient-to-br from-emerald-50 to-teal-50 hover:shadow-lg transition-all duration-300 group hover:scale-[1.02]">
-          <div className="absolute top-0 right-0 w-20 h-20 bg-emerald-400/10 rounded-full blur-2xl"></div>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-emerald-900">Verified Actions</CardTitle>
-            <div className="p-2 bg-emerald-500 rounded-lg group-hover:scale-110 transition-transform">
-              <CheckCircle className="h-4 w-4 text-white" />
+        <Card className="border border-gray-200 hover:shadow-md transition-shadow bg-white">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-gray-700">Verified Actions</CardTitle>
+            <div className="p-2 bg-emerald-100 rounded-lg">
+              <CheckCircle className="h-4 w-4 text-emerald-600" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-emerald-700">2,891</div>
-            <p className="text-xs text-emerald-600 mt-1">
+            <div className="text-2xl font-bold text-gray-900">2,891</div>
+            <p className="text-xs text-gray-500 mt-1">
               <span className="font-medium">83.6%</span> success rate
             </p>
           </CardContent>
         </Card>
 
-        <Card className="relative overflow-hidden border-0 bg-gradient-to-br from-orange-50 to-amber-50 hover:shadow-lg transition-all duration-300 group hover:scale-[1.02]">
-          <div className="absolute top-0 right-0 w-20 h-20 bg-orange-400/10 rounded-full blur-2xl"></div>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-orange-900">Total Impact</CardTitle>
-            <div className="p-2 bg-orange-500 rounded-lg group-hover:scale-110 transition-transform">
-              <Zap className="h-4 w-4 text-white" />
+        <Card className="border border-gray-200 hover:shadow-md transition-shadow bg-white">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-gray-700">Total Impact</CardTitle>
+            <div className="p-2 bg-orange-100 rounded-lg">
+              <Zap className="h-4 w-4 text-orange-600" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-orange-700">892 kWh</div>
-            <p className="text-xs text-orange-600 mt-1">
+            <div className="text-2xl font-bold text-gray-900">892 kWh</div>
+            <p className="text-xs text-gray-500 mt-1">
               Energy saved this month
             </p>
           </CardContent>
@@ -136,14 +126,11 @@ export default function DashboardPage() {
       </div>
 
       {/* Charts Row */}
-      <div className="grid gap-4 md:grid-cols-7">
+      <div className="grid gap-6 md:grid-cols-7">
         {/* Weekly Submissions Chart */}
-        <Card className="col-span-4 border-0 shadow-lg hover:shadow-xl transition-shadow">
-          <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 border-b">
-            <div className="flex items-center gap-2">
-              <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse"></div>
-              <CardTitle className="text-green-900">Weekly Submissions</CardTitle>
-            </div>
+        <Card className="col-span-4 border border-gray-200 bg-white">
+          <CardHeader className="border-b">
+            <CardTitle className="text-gray-900">Weekly Submissions</CardTitle>
             <CardDescription>Student eco-action submissions over the past week</CardDescription>
           </CardHeader>
           <CardContent className="pl-2">
@@ -170,12 +157,9 @@ export default function DashboardPage() {
         </Card>
 
         {/* Verification Status */}
-        <Card className="col-span-3 border-0 shadow-lg hover:shadow-xl transition-shadow">
-          <CardHeader className="bg-gradient-to-r from-blue-50 to-cyan-50 border-b">
-            <div className="flex items-center gap-2">
-              <div className="h-2 w-2 bg-blue-500 rounded-full animate-pulse"></div>
-              <CardTitle className="text-blue-900">Verification Status</CardTitle>
-            </div>
+        <Card className="col-span-3 border border-gray-200 bg-white">
+          <CardHeader className="border-b">
+            <CardTitle className="text-gray-900">Verification Status</CardTitle>
             <CardDescription>Current week&apos;s verification breakdown</CardDescription>
           </CardHeader>
           <CardContent>
@@ -213,14 +197,9 @@ export default function DashboardPage() {
       </div>
 
       {/* Impact Trends */}
-      <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
-        <CardHeader className="bg-gradient-to-r from-orange-50 via-green-50 to-blue-50 border-b">
-          <div className="flex items-center gap-2">
-            <div className="h-2 w-2 bg-orange-500 rounded-full animate-pulse"></div>
-            <CardTitle className="bg-gradient-to-r from-orange-600 to-blue-600 bg-clip-text text-transparent">
-              Environmental Impact Trends
-            </CardTitle>
-          </div>
+      <Card className="border border-gray-200 bg-white">
+        <CardHeader className="border-b">
+          <CardTitle className="text-gray-900">Environmental Impact Trends</CardTitle>
           <CardDescription>Cumulative energy and water savings over time</CardDescription>
         </CardHeader>
         <CardContent className="pl-2">
@@ -258,12 +237,9 @@ export default function DashboardPage() {
       </Card>
 
       {/* Top Performing Schools */}
-      <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
-        <CardHeader className="bg-gradient-to-r from-green-50 to-teal-50 border-b">
-          <div className="flex items-center gap-2">
-            <School className="h-5 w-5 text-green-600" />
-            <CardTitle className="text-green-900">Top Performing Schools</CardTitle>
-          </div>
+      <Card className="border border-gray-200 bg-white">
+        <CardHeader className="border-b">
+          <CardTitle className="text-gray-900">Top Performing Schools</CardTitle>
           <CardDescription>Schools leading in verified eco-actions</CardDescription>
         </CardHeader>
         <CardContent>
