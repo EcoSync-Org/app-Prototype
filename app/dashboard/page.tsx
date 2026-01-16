@@ -1,18 +1,18 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { 
   Users, 
   CheckCircle, 
-  XCircle, 
+  Target,
   Zap, 
-  Droplet, 
   TrendingUp,
-  School,
-  Target
+  School
 } from "lucide-react"
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts"
+import { getCurrentUser, type UserRole } from "@/lib/auth"
 
 // Mock data - will be replaced with real API data
 const weeklySubmissions = [
@@ -46,6 +46,29 @@ const topSchools = [
 ]
 
 export default function DashboardPage() {
+  const [user, setUser] = useState<ReturnType<typeof getCurrentUser>>(null)
+
+  useEffect(() => {
+    setUser(getCurrentUser())
+  }, [])
+
+  if (!user) return null
+
+  // Render different dashboards based on role
+  if (user.role === 'school_admin') {
+    return <SchoolAdminDashboard />
+  }
+
+  if (user.role === 'district_admin') {
+    return <DistrictAdminDashboard />
+  }
+
+  // Default: Super Admin Dashboard
+  return <SuperAdminDashboard />
+}
+
+// Super Admin Dashboard (Green Theme)
+function SuperAdminDashboard() {
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -196,14 +219,116 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      {/* Impact Trends */}
+      {/* Top Performing Schools */}
       <Card className="border border-gray-200 bg-white">
         <CardHeader className="border-b">
-          <CardTitle className="text-gray-900">Environmental Impact Trends</CardTitle>
-          <CardDescription>Cumulative energy and water savings over time</CardDescription>
+          <CardTitle className="text-gray-900">Top Performing Schools</CardTitle>
+          <CardDescription>Schools leading in verified eco-actions</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {topSchools.map((school, index) => (
+              <div key={school.name} className="flex items-center gap-4">
+                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-green-100 text-green-600 font-bold text-sm">
+                  {index + 1}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <p className="font-medium truncate">{school.name}</p>
+                  </div>
+                  <div className="flex items-center gap-4 mt-1 text-xs text-gray-500">
+                    <span>{school.students} students</span>
+                    <span>•</span>
+                    <span>{school.actions} actions</span>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="font-bold text-green-600">{school.impact} kWh</p>
+                  <p className="text-xs text-gray-500">saved</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
+
+// School Admin Dashboard (Blue/Teal Theme - School Focused)
+function SchoolAdminDashboard() {
+  return (
+    <div className="space-y-6">
+      {/* Page Header */}
+      <div className="mb-8">
+        <div className="flex items-center gap-2 mb-2">
+          <div className="h-1 w-10 bg-blue-500 rounded-full"></div>
+          <span className="text-xs font-semibold text-blue-600 uppercase tracking-wider">School Dashboard</span>
+        </div>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          Kigali International School
+        </h1>
+        <p className="text-gray-600">
+          Monitor your school&apos;s eco-impact and student engagement
+        </p>
+      </div>
+
+      {/* School-Specific Stats - Horizontal Cards */}
+      <div className="grid gap-4 md:grid-cols-3">
+        <Card className="border-l-4 border-l-blue-500 border border-gray-200 bg-white">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-sm font-medium text-gray-700">Your Students</CardTitle>
+              <Users className="h-5 w-5 text-blue-500" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold text-gray-900">120</div>
+            <p className="text-xs text-gray-500 mt-1">
+              <span className="text-blue-600 font-medium">98 active</span> this week
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="border-l-4 border-l-teal-500 border border-gray-200 bg-white">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-sm font-medium text-gray-700">Pending Verification</CardTitle>
+              <Target className="h-5 w-5 text-teal-500" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold text-gray-900">23</div>
+            <p className="text-xs text-gray-500 mt-1">
+              <span className="text-orange-600 font-medium">Needs review</span>
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="border-l-4 border-l-cyan-500 border border-gray-200 bg-white">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-sm font-medium text-gray-700">School Impact</CardTitle>
+              <Zap className="h-5 w-5 text-cyan-500" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold text-gray-900">892 kWh</div>
+            <p className="text-xs text-gray-500 mt-1">
+              Total energy saved
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Impact Chart - Larger */}
+      <Card className="border border-gray-200 bg-white">
+        <CardHeader className="border-b bg-blue-50">
+          <CardTitle className="text-gray-900">Your School&apos;s Impact</CardTitle>
+          <CardDescription>Monthly environmental savings</CardDescription>
         </CardHeader>
         <CardContent className="pl-2">
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height={350}>
             <LineChart data={impactData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
               <XAxis dataKey="month" stroke="#64748b" fontSize={12} />
@@ -218,17 +343,17 @@ export default function DashboardPage() {
               <Line 
                 type="monotone" 
                 dataKey="energy" 
-                stroke="#fb923c" 
+                stroke="#0ea5e9" 
                 strokeWidth={3}
-                dot={{ fill: '#fb923c', r: 4 }}
+                dot={{ fill: '#0ea5e9', r: 5 }}
                 name="Energy (kWh)"
               />
               <Line 
                 type="monotone" 
                 dataKey="water" 
-                stroke="#3b82f6" 
+                stroke="#14b8a6" 
                 strokeWidth={3}
-                dot={{ fill: '#3b82f6', r: 4 }}
+                dot={{ fill: '#14b8a6', r: 5 }}
                 name="Water (Liters)"
               />
             </LineChart>
@@ -236,35 +361,35 @@ export default function DashboardPage() {
         </CardContent>
       </Card>
 
-      {/* Top Performing Schools */}
-      <Card className="border border-gray-200 bg-white">
-        <CardHeader className="border-b">
-          <CardTitle className="text-gray-900">Top Performing Schools</CardTitle>
-          <CardDescription>Schools leading in verified eco-actions</CardDescription>
+      {/* Quick Actions */}
+      <Card className="border border-blue-200 bg-blue-50">
+        <CardHeader>
+          <CardTitle className="text-gray-900">Quick Actions</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {topSchools.map((school, index) => (
-              <div key={school.name} className="flex items-center gap-4">
-                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-bold text-sm">
-                  {index + 1}
+          <div className="grid gap-3 md:grid-cols-2">
+            <button className="p-4 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow text-left">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-blue-100 rounded-lg">
+                  <CheckCircle className="h-5 w-5 text-blue-600" />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <p className="font-medium truncate">{school.name}</p>
-                  </div>
-                  <div className="flex items-center gap-4 mt-1 text-xs text-muted-foreground">
-                    <span>{school.students} students</span>
-                    <span>•</span>
-                    <span>{school.actions} actions</span>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <p className="font-bold text-primary">{school.impact} kWh</p>
-                  <p className="text-xs text-muted-foreground">saved</p>
+                <div>
+                  <p className="font-medium text-gray-900">Review Submissions</p>
+                  <p className="text-xs text-gray-500">23 pending verification</p>
                 </div>
               </div>
-            ))}
+            </button>
+            <button className="p-4 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow text-left">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-teal-100 rounded-lg">
+                  <Users className="h-5 w-5 text-teal-600" />
+                </div>
+                <div>
+                  <p className="font-medium text-gray-900">View Students</p>
+                  <p className="text-xs text-gray-500">Manage your 120 students</p>
+                </div>
+              </div>
+            </button>
           </div>
         </CardContent>
       </Card>
@@ -272,3 +397,120 @@ export default function DashboardPage() {
   )
 }
 
+// District Admin Dashboard (Purple/Indigo Theme - District Overview)
+function DistrictAdminDashboard() {
+  return (
+    <div className="space-y-6">
+      {/* Page Header */}
+      <div className="mb-8">
+        <div className="flex items-center gap-2 mb-2">
+          <div className="h-1 w-10 bg-purple-500 rounded-full"></div>
+          <span className="text-xs font-semibold text-purple-600 uppercase tracking-wider">District Overview</span>
+          <Badge variant="outline" className="ml-2 text-xs">Read-Only</Badge>
+        </div>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          Gasabo District
+        </h1>
+        <p className="text-gray-600">
+          Monitor environmental impact across all district schools
+        </p>
+      </div>
+
+      {/* District-Wide Stats - Grid Layout */}
+      <div className="grid gap-6 md:grid-cols-4">
+        <Card className="border border-purple-200 bg-purple-50">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-purple-900">Total Schools</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold text-purple-700">5</div>
+            <p className="text-xs text-purple-600 mt-1">In your district</p>
+          </CardContent>
+        </Card>
+
+        <Card className="border border-indigo-200 bg-indigo-50">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-indigo-900">Total Students</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold text-indigo-700">1,248</div>
+            <p className="text-xs text-indigo-600 mt-1">Across all schools</p>
+          </CardContent>
+        </Card>
+
+        <Card className="border border-violet-200 bg-violet-50">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-violet-900">Total Actions</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold text-violet-700">3,456</div>
+            <p className="text-xs text-violet-600 mt-1">Verified eco-actions</p>
+          </CardContent>
+        </Card>
+
+        <Card className="border border-fuchsia-200 bg-fuchsia-50">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-fuchsia-900">District Impact</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold text-fuchsia-700">2,982 kWh</div>
+            <p className="text-xs text-fuchsia-600 mt-1">Total energy saved</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Schools Performance Table */}
+      <Card className="border border-gray-200 bg-white">
+        <CardHeader className="border-b bg-purple-50">
+          <CardTitle className="text-gray-900 flex items-center gap-2">
+            <School className="h-5 w-5 text-purple-600" />
+            Schools Performance
+          </CardTitle>
+          <CardDescription>Overview of all schools in Gasabo District</CardDescription>
+        </CardHeader>
+        <CardContent className="pt-6">
+          <div className="space-y-4">
+            {topSchools.map((school, index) => (
+              <div key={school.name} className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-purple-100 text-purple-600 font-bold">
+                  {index + 1}
+                </div>
+                <div className="flex-1">
+                  <p className="font-semibold text-gray-900">{school.name}</p>
+                  <div className="flex items-center gap-4 mt-1 text-xs text-gray-500">
+                    <span>{school.students} students</span>
+                    <span>•</span>
+                    <span>{school.actions} actions</span>
+                    <span>•</span>
+                    <span className="text-purple-600 font-medium">{school.impact} kWh saved</span>
+                  </div>
+                </div>
+                <div className="px-4 py-2 bg-white border border-gray-200 rounded-lg">
+                  <p className="text-sm text-gray-500">View Details</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Info Banner */}
+      <Card className="border border-purple-200 bg-purple-50">
+        <CardContent className="pt-6">
+          <div className="flex items-start gap-3">
+            <div className="p-2 bg-purple-100 rounded-lg">
+              <School className="h-5 w-5 text-purple-600" />
+            </div>
+            <div>
+              <p className="font-semibold text-purple-900">Read-Only Access</p>
+              <p className="text-sm text-purple-700 mt-1">
+                As a District Admin, you have view-only access to monitor schools and students in Gasabo District. 
+                Contact system administrators for data modifications.
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
