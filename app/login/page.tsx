@@ -5,16 +5,30 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Mail, Lock, ArrowRight } from "lucide-react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Mail, Lock, ArrowRight, User } from "lucide-react"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [role, setRole] = useState<string>("super_admin")
   const [isLoading, setIsLoading] = useState(false)
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
+    
+    // Store role in localStorage for role-based access
+    localStorage.setItem('userRole', role)
+    localStorage.setItem('userEmail', email)
+    
+    // Set user name based on role
+    const roleNames = {
+      super_admin: 'Super Admin',
+      school_admin: 'School Admin',
+      district_admin: 'District Admin'
+    }
+    localStorage.setItem('userName', roleNames[role as keyof typeof roleNames])
     
     setTimeout(() => {
       window.location.href = "/dashboard"
@@ -122,6 +136,41 @@ export default function LoginPage() {
 
           {/* Form */}
           <form onSubmit={handleLogin} className="space-y-5">
+            {/* Role Selection */}
+            <div className="space-y-2">
+              <Label htmlFor="role" className="text-sm font-medium text-gray-700">
+                Login As
+              </Label>
+              <div className="relative">
+                <User className="absolute left-3 top-3 h-5 w-5 text-gray-400 pointer-events-none z-10" />
+                <Select value={role} onValueChange={setRole}>
+                  <SelectTrigger className="pl-11 h-12 border-2 border-gray-200 rounded-xl">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="super_admin">
+                      <div className="flex flex-col items-start">
+                        <span className="font-medium">Super Admin</span>
+                        <span className="text-xs text-gray-500">Full access to all features</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="school_admin">
+                      <div className="flex flex-col items-start">
+                        <span className="font-medium">School Admin</span>
+                        <span className="text-xs text-gray-500">Manage your school only</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="district_admin">
+                      <div className="flex flex-col items-start">
+                        <span className="font-medium">District Admin</span>
+                        <span className="text-xs text-gray-500">View district data (read-only)</span>
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
             {/* Email */}
             <div className="space-y-2">
               <Label htmlFor="email" className="text-sm font-medium text-gray-700">
