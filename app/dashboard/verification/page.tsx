@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { getCurrentUser } from "@/lib/auth"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -76,6 +77,11 @@ export default function VerificationPage() {
   const [selectedSubmission, setSelectedSubmission] = useState<any>(null)
   const [filter, setFilter] = useState("all")
   const [rejectReason, setRejectReason] = useState("")
+  const [user, setUser] = useState<ReturnType<typeof getCurrentUser>>(null)
+
+  useEffect(() => {
+    setUser(getCurrentUser())
+  }, [])
 
   const handleVerify = (id: number) => {
     // Will be connected to API
@@ -103,6 +109,13 @@ export default function VerificationPage() {
   }
 
   const filteredSubmissions = submissions.filter(sub => {
+    // Filter by school for school admins
+    if (user?.role === 'school_admin') {
+      // Assuming school admin's school is "Kigali International School"
+      if (sub.school !== "Kigali International School") return false
+    }
+    
+    // Filter by status
     if (filter === "all") return true
     return sub.status === filter
   })
@@ -112,9 +125,18 @@ export default function VerificationPage() {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
+          <div className="flex items-center gap-2 mb-2">
+            <div className={`h-1 w-10 rounded-full ${user?.role === 'school_admin' ? 'bg-blue-500' : 'bg-green-500'}`}></div>
+            <span className={`text-xs font-semibold uppercase tracking-wider ${user?.role === 'school_admin' ? 'text-blue-600' : 'text-green-600'}`}>
+              {user?.role === 'school_admin' ? 'School Verification' : 'All Submissions'}
+            </span>
+          </div>
           <h1 className="text-3xl font-bold tracking-tight">Verification Queue</h1>
           <p className="text-muted-foreground mt-1">
-            Review and verify student eco-action submissions
+            {user?.role === 'school_admin' 
+              ? 'Review and verify submissions from your school'
+              : 'Review and verify student eco-action submissions'
+            }
           </p>
         </div>
       </div>

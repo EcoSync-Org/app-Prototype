@@ -1,5 +1,7 @@
 "use client"
 
+import { useState, useEffect } from "react"
+import { getCurrentUser } from "@/lib/auth"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -73,14 +75,43 @@ const weeklyTrends = [
 ]
 
 export default function AnalyticsPage() {
+  const [user, setUser] = useState<ReturnType<typeof getCurrentUser>>(null)
+
+  useEffect(() => {
+    setUser(getCurrentUser())
+  }, [])
+
   return (
     <div className="space-y-6">
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Impact Analytics</h1>
+          <div className="flex items-center gap-2 mb-2">
+            <div className={`h-1 w-10 rounded-full ${
+              user?.role === 'school_admin' ? 'bg-blue-500' : 
+              user?.role === 'district_admin' ? 'bg-purple-500' : 
+              'bg-green-500'
+            }`}></div>
+            <span className={`text-xs font-semibold uppercase tracking-wider ${
+              user?.role === 'school_admin' ? 'text-blue-600' : 
+              user?.role === 'district_admin' ? 'text-purple-600' : 
+              'text-green-600'
+            }`}>
+              {user?.role === 'school_admin' ? 'School Analytics' : 
+               user?.role === 'district_admin' ? 'District Analytics' : 
+               'System Analytics'}
+            </span>
+          </div>
+          <h1 className="text-3xl font-bold tracking-tight">
+            {user?.role === 'school_admin' ? 'Your School\'s Impact' : 'Impact Analytics'}
+          </h1>
           <p className="text-muted-foreground mt-1">
-            Comprehensive environmental impact tracking and insights
+            {user?.role === 'school_admin' 
+              ? 'Track your school\'s environmental impact and progress'
+              : user?.role === 'district_admin'
+              ? 'View district-wide environmental impact'
+              : 'Comprehensive environmental impact tracking and insights'
+            }
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -104,13 +135,17 @@ export default function AnalyticsPage() {
 
       {/* Key Metrics */}
       <div className="grid gap-4 md:grid-cols-4">
-        <Card>
+        <Card className={user?.role === 'school_admin' ? 'border-l-4 border-l-blue-500' : user?.role === 'district_admin' ? 'border-l-4 border-l-purple-500' : ''}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Energy Saved</CardTitle>
             <Zap className="h-4 w-4 text-orange-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">2,982 kWh</div>
+            <div className="text-2xl font-bold">
+              {user?.role === 'school_admin' ? '892 kWh' : 
+               user?.role === 'district_admin' ? '2,982 kWh' : 
+               '2,982 kWh'}
+            </div>
             <p className="text-xs text-muted-foreground mt-1">
               <span className="text-success font-medium">+18.2%</span> vs last month
             </p>
@@ -123,7 +158,11 @@ export default function AnalyticsPage() {
             <Droplet className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">1,856 L</div>
+            <div className="text-2xl font-bold">
+              {user?.role === 'school_admin' ? '645 L' : 
+               user?.role === 'district_admin' ? '1,856 L' : 
+               '1,856 L'}
+            </div>
             <p className="text-xs text-muted-foreground mt-1">
               <span className="text-success font-medium">+14.7%</span> vs last month
             </p>
@@ -136,7 +175,11 @@ export default function AnalyticsPage() {
             <Recycle className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">845 kg</div>
+            <div className="text-2xl font-bold">
+              {user?.role === 'school_admin' ? '234 kg' : 
+               user?.role === 'district_admin' ? '845 kg' : 
+               '845 kg'}
+            </div>
             <p className="text-xs text-muted-foreground mt-1">
               <span className="text-success font-medium">+22.5%</span> vs last month
             </p>
@@ -146,10 +189,18 @@ export default function AnalyticsPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">CO₂ Offset</CardTitle>
-            <TrendingUp className="h-4 w-4 text-primary" />
+            <TrendingUp className={`h-4 w-4 ${
+              user?.role === 'school_admin' ? 'text-blue-500' : 
+              user?.role === 'district_admin' ? 'text-purple-500' : 
+              'text-primary'
+            }`} />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">1.8 tons</div>
+            <div className="text-2xl font-bold">
+              {user?.role === 'school_admin' ? '0.5 tons' : 
+               user?.role === 'district_admin' ? '1.8 tons' : 
+               '1.8 tons'}
+            </div>
             <p className="text-xs text-muted-foreground mt-1">
               Carbon emissions prevented
             </p>
