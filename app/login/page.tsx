@@ -1,237 +1,127 @@
 "use client"
 
-import { useState } from "react"
 import Image from "next/image"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Mail, Lock, ArrowRight, User } from "lucide-react"
+import { Shield, School, Building2, ArrowRight } from "lucide-react"
 
-export default function LoginPage() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [role, setRole] = useState<string>("super_admin")
-  const [isLoading, setIsLoading] = useState(false)
+const roles = [
+  {
+    id: "super_admin",
+    name: "Super Admin",
+    description: "Full access to all features and schools",
+    icon: Shield,
+    gradient: "from-green-500 to-emerald-500",
+  },
+  {
+    id: "school_admin",
+    name: "School Admin",
+    description: "Manage your school's students & verification",
+    icon: School,
+    gradient: "from-blue-500 to-cyan-500",
+  },
+  {
+    id: "district_admin",
+    name: "District Admin",
+    description: "View district-wide impact (read-only)",
+    icon: Building2,
+    gradient: "from-purple-500 to-fuchsia-500",
+  },
+]
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    
-    // Store role in localStorage for role-based access
-    localStorage.setItem('userRole', role)
-    localStorage.setItem('userEmail', email)
-    
-    // Set user name based on role
-    const roleNames = {
-      super_admin: 'Super Admin',
-      school_admin: 'School Admin',
-      district_admin: 'District Admin'
-    }
-    localStorage.setItem('userName', roleNames[role as keyof typeof roleNames])
-    
-    setTimeout(() => {
-      window.location.href = "/dashboard"
-    }, 1000)
+const setPortal = (roleId: string) => {
+  const roleNames: Record<string, string> = {
+    super_admin: "Super Admin",
+    school_admin: "School Admin",
+    district_admin: "District Admin",
   }
 
+  if (typeof window === "undefined") return
+  localStorage.setItem("userRole", roleId)
+  localStorage.setItem("userEmail", `${roleId}@ecosync.rw`)
+  localStorage.setItem("userName", roleNames[roleId])
+  window.location.href = "/dashboard"
+}
+
+export default function LoginPage() {
   return (
     <div className="min-h-screen flex">
-      {/* Left Side - Clean Branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-green-500 via-emerald-500 to-teal-500 relative overflow-hidden">
-        {/* Diagonal Stripes Pattern - Covering Entire Background */}
+      {/* Left Side - Branding */}
+      <div className="hidden lg:flex lg:w-1/2 bg-linear-to-br from-green-500 via-emerald-500 to-teal-500 relative overflow-hidden">
+        {/* Pattern */}
         <div className="absolute inset-0 opacity-10">
           <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <pattern id="diagonalStripes" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
-                <line x1="0" y1="0" x2="60" y2="60" stroke="white" strokeWidth="3"/>
-                <line x1="15" y1="0" x2="75" y2="60" stroke="white" strokeWidth="3"/>
-                <line x1="30" y1="0" x2="90" y2="60" stroke="white" strokeWidth="3"/>
-                <line x1="45" y1="0" x2="105" y2="60" stroke="white" strokeWidth="3"/>
-                <line x1="-15" y1="0" x2="45" y2="60" stroke="white" strokeWidth="3"/>
-                <line x1="-30" y1="0" x2="30" y2="60" stroke="white" strokeWidth="3"/>
+                <line x1="0" y1="0" x2="60" y2="60" stroke="white" strokeWidth="3" />
+                <line x1="15" y1="0" x2="75" y2="60" stroke="white" strokeWidth="3" />
+                <line x1="30" y1="0" x2="90" y2="60" stroke="white" strokeWidth="3" />
+                <line x1="45" y1="0" x2="105" y2="60" stroke="white" strokeWidth="3" />
+                <line x1="-15" y1="0" x2="45" y2="60" stroke="white" strokeWidth="3" />
+                <line x1="-30" y1="0" x2="30" y2="60" stroke="white" strokeWidth="3" />
               </pattern>
             </defs>
-            
-            {/* Apply pattern to entire background */}
-            <rect x="0" y="0" width="100%" height="100%" fill="url(#diagonalStripes)"/>
+            <rect x="0" y="0" width="100%" height="100%" fill="url(#diagonalStripes)" />
           </svg>
         </div>
 
-        {/* Content - Centered */}
-        <div className="relative z-10 flex items-center justify-center w-full p-12">
-          <div className="text-center">
-            {/* Large Logo */}
-            <div className="mb-8">
-              <Image
-                src="/EcoSync.png"
-                alt="EcoSync"
-                width={200}
-                height={200}
-                priority
-                className="mx-auto drop-shadow-2xl relative z-20"
-              />
-            </div>
-          </div>
+        <div className="relative z-10 flex flex-col items-center justify-center w-full p-12 text-center text-white">
+          <Image src="/EcoSync.png" alt="EcoSync" width={220} height={220} priority className="mb-6" />
+          <h2 className="text-3xl font-bold mb-4">EcoSync</h2>
+          <p className="text-lg font-light max-w-md leading-relaxed opacity-95">
+            Rwanda's first AI-powered sustainability platform connecting smart energy with verified environmental action
+          </p>
         </div>
 
-        {/* Footer */}
         <div className="absolute bottom-8 left-0 right-0 text-center z-10">
-          <p className="text-sm text-white/60">© 2026 EcoSync. All rights reserved.</p>
+          <p className="text-sm text-white/70">© 2026 EcoSync. All rights reserved.</p>
         </div>
       </div>
 
-      {/* Right Side - Login Form */}
-      <div className="flex-1 flex items-center justify-center p-8 bg-white relative overflow-hidden">
-        {/* Decorative Corner Patterns */}
-        {/* Top Right Corner */}
-        <div className="absolute top-0 right-0 w-64 h-64 opacity-5">
-          <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="cornerStripes" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-                <line x1="0" y1="20" x2="20" y2="0" stroke="#22c55e" strokeWidth="2"/>
-                <line x1="10" y1="20" x2="20" y2="10" stroke="#22c55e" strokeWidth="1.5"/>
-                <line x1="0" y1="10" x2="10" y2="0" stroke="#22c55e" strokeWidth="1.5"/>
-              </pattern>
-            </defs>
-            <circle cx="256" cy="-128" r="200" fill="url(#cornerStripes)"/>
-          </svg>
-        </div>
-
-        {/* Bottom Left Corner */}
-        <div className="absolute bottom-0 left-0 w-48 h-48 opacity-5">
-          <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="cornerStripes2" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-                <line x1="0" y1="0" x2="20" y2="20" stroke="#0ea5e9" strokeWidth="2"/>
-                <line x1="10" y1="0" x2="20" y2="10" stroke="#0ea5e9" strokeWidth="1.5"/>
-                <line x1="0" y1="10" x2="10" y2="20" stroke="#0ea5e9" strokeWidth="1.5"/>
-              </pattern>
-            </defs>
-            <circle cx="-96" cy="240" r="180" fill="url(#cornerStripes2)"/>
-          </svg>
-        </div>
-
-        <div className="w-full max-w-md relative z-10">
-          {/* Mobile logo */}
-          <div className="lg:hidden text-center mb-8">
-            <Image
-              src="/EcoSync.png"
-              alt="EcoSync"
-              width={80}
-              height={80}
-              priority
-              className="mx-auto mb-3"
-            />
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
-              EcoSync
-            </h1>
+      {/* Right Side - Portal Selection */}
+      <div className="flex-1 flex items-center justify-center p-8 bg-gray-50">
+        <div className="w-full max-w-xl space-y-8">
+          {/* Header */}
+          <div className="text-center space-y-3">
+            <div className="lg:hidden mx-auto mb-6">
+              <Image src="/EcoSync.png" alt="EcoSync" width={80} height={80} priority />
+            </div>
+            <h1 className="text-4xl font-bold text-gray-900">Select Portal</h1>
+            <p className="text-gray-600 text-lg">Choose your admin portal to continue</p>
           </div>
 
-          {/* Welcome */}
-          <div className="mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome back</h2>
-            <p className="text-gray-600">Sign in to your account</p>
+          {/* Portal Cards */}
+          <div className="space-y-4">
+            {roles.map((portal) => {
+              const Icon = portal.icon
+              return (
+                <button
+                  key={portal.id}
+                  onClick={() => setPortal(portal.id)}
+                  className="group w-full flex items-center gap-5 p-6 bg-white border-2 border-gray-200 rounded-2xl hover:border-green-500 transition-all cursor-pointer"
+                >
+                  {/* Icon */}
+                  <div className={`w-14 h-14 rounded-xl bg-linear-to-br ${portal.gradient} flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform`}>
+                    <Icon className="w-7 h-7 text-white" />
+                  </div>
+
+                  {/* Content */}
+                  <div className="flex-1 text-left">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-1">{portal.name}</h3>
+                    <p className="text-sm text-gray-500">{portal.description}</p>
+                  </div>
+
+                  {/* Arrow */}
+                  <ArrowRight className="w-6 h-6 text-gray-400 group-hover:text-green-500 group-hover:translate-x-1 transition-all" />
+                </button>
+              )
+            })}
           </div>
 
-          {/* Form */}
-          <form onSubmit={handleLogin} className="space-y-5">
-            {/* Role Selection */}
-            <div className="space-y-2">
-              <Label htmlFor="role" className="text-sm font-medium text-gray-700">
-                Login As
-              </Label>
-              <div className="relative">
-                <User className="absolute left-3 top-3 h-5 w-5 text-gray-400 pointer-events-none z-10" />
-                <Select value={role} onValueChange={setRole}>
-                  <SelectTrigger className="pl-11 h-12 border-2 border-gray-200 rounded-xl">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="super_admin">
-                      <div className="flex flex-col items-start">
-                        <span className="font-medium">Super Admin</span>
-                        <span className="text-xs text-gray-500">Full access to all features</span>
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="school_admin">
-                      <div className="flex flex-col items-start">
-                        <span className="font-medium">School Admin</span>
-                        <span className="text-xs text-gray-500">Manage your school only</span>
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="district_admin">
-                      <div className="flex flex-col items-start">
-                        <span className="font-medium">District Admin</span>
-                        <span className="text-xs text-gray-500">View district data (read-only)</span>
-                      </div>
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            {/* Email */}
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-medium text-gray-700">
-                Email Address
-              </Label>
-              <div className="relative group">
-                <Mail className="absolute left-3 top-3.5 h-5 w-5 text-gray-400 group-focus-within:text-green-500 transition-colors" />
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="admin@ecosync.rw"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="pl-11 h-12 border-2 border-gray-200 focus:border-green-500 rounded-xl"
-                  required
-                />
-              </div>
-            </div>
-
-            {/* Password */}
-            <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <Label htmlFor="password" className="text-sm font-medium text-gray-700">
-                  Password
-                </Label>
-                <a href="#" className="text-sm font-medium text-green-600 hover:text-green-700">
-                  Forgot?
-                </a>
-              </div>
-              <div className="relative group">
-                <Lock className="absolute left-3 top-3.5 h-5 w-5 text-gray-400 group-focus-within:text-green-500 transition-colors" />
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="pl-11 h-12 border-2 border-gray-200 focus:border-green-500 rounded-xl"
-                  required
-                />
-              </div>
-            </div>
-
-            {/* Submit */}
-            <Button 
-              type="submit" 
-              className="w-full h-12 text-base font-semibold bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 rounded-xl shadow-lg hover:shadow-xl transition-all group"
-              disabled={isLoading}
-            >
-              {isLoading ? "Signing in..." : "Sign in"}
-              {!isLoading && <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />}
-            </Button>
-          </form>
-
-          {/* Help */}
-          <p className="text-center text-sm text-gray-600 mt-8">
-            Need help?{" "}
-            <a href="#" className="font-medium text-green-600 hover:text-green-700">
-              Contact Support
-            </a>
-          </p>
+          {/* Footer Note */}
+          <div className="text-center">
+            <p className="text-sm text-gray-500">
+              No credentials required • Instant access
+            </p>
+          </div>
         </div>
       </div>
     </div>
